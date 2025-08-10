@@ -1,34 +1,35 @@
-name: packsquash
+name: Optimize resource pack
 
-on:
-  push:
-    branches:
-      - main # or your branch name
+on: 
+  [push, workflow_dispatch]
 
 jobs:
-  build:
+  packsquash:
+    permissions: write-all
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Clone repository with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for PackSquash
 
       - name: Run PackSquash
-        uses: ComunidadAylas/PackSquash-action@v3
+        uses: ComunidadAylas/PackSquash-action@v4
         with:
-          config-path: packsquash.toml
-          output-path: pack.zip
+          options_file: packsquash.toml  # Your PackSquash config file
+          path: Frontierparkspack        # Folder where assets/, pack.mcmeta, etc. are
 
-      - name: Upload pack to server
-        uses: appleboy/scp-action@v0.1.7
+      - name: Upload optimized pack to artifacts
+        uses: actions/upload-artifact@v4
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # or use password: ${{ secrets.PASSWORD }}
+          name: optimized-pack
+          path: pack.zip  # Output file from PackSquash
+
+      - name: Upload via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SCP_HOST }}
+          username: ${{ secrets.SCP_USER }}
+          password: ${{ secrets.SCP_PASS }}
           source: "pack.zip"
-          target: "/var/www/html/resourcepacks/" # Change to your web folder
-
-      - name: Update server.properties
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} \
-          "sed -i 's|^resource-pack=.*|resource-pack=${{ secrets.RESOURCE_PACK_URL }}|g' /path/to/server/server.properties"
+          target: "/path/on/server"
