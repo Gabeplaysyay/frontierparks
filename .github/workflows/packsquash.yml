@@ -1,55 +1,29 @@
-name: Optimize and Deploy Resource Pack
-on: [push, workflow_dispatch]
+name: packsquash
+
+on:
+  push:
+    branches:
+      - main # or whatever branch you commit to
 
 jobs:
-  packsquash:
-    permissions: write-all
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Set up job
+        uses: actions/checkout@v3
 
       - name: Run PackSquash
-        uses: ComunidadAylas/PackSquash-action@v4
+        uses: ComunidadAylas/PackSquash-action@v3
         with:
-          packsquash_version: latest
-          options: |
-            pack_directory = 'Frontierparkspack'
-
-      - name: Download optimized pack
-        uses: actions/download-artifact@v4
-        with:
-          name: Optimized pack
-
-      - name: Generate SHA1 hash
-        id: hash
-        run: echo "sha1=$(sha1sum pack.zip | awk '{print $1}')" >> $GITHUB_OUTPUT
-
-      - name: Tag and create release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          files: |
-            pack.zip
-            hash.txt
+          config-path: packsquash.toml
+          output-path: pack.zip
 
       - name: Upload pack to server
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASS }}
-          source: pack.zip
-          target: /var/www/html/resourcepack.zip  # Change to your public path
-
-      - name: Update server.properties
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASS }}
-          script: |
-            sed -i "s|^resource-pack=.*|resource-pack=http://YOUR_SERVER_IP/resourcepack.zip|" ${{ secrets.SERVER_PATH }}
-            sed -i "s|^resource-pack-sha1=.*|resource-pack-sha1=${{ steps.hash.outputs.sha1 }}|" ${{ secrets.SERVER_PATH }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # or use password: ${{ secrets.PASSWORD }}
+          source: "pack.zip"
+          target: "/path/on/server"
