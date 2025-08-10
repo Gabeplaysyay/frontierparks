@@ -3,14 +3,14 @@ name: packsquash
 on:
   push:
     branches:
-      - main # or whatever branch you commit to
+      - main # or your branch name
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up job
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Run PackSquash
@@ -26,4 +26,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }} # or use password: ${{ secrets.PASSWORD }}
           source: "pack.zip"
-          target: "/path/on/server"
+          target: "/var/www/html/resourcepacks/" # Change to your web folder
+
+      - name: Update server.properties
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} \
+          "sed -i 's|^resource-pack=.*|resource-pack=${{ secrets.RESOURCE_PACK_URL }}|g' /path/to/server/server.properties"
