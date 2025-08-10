@@ -1,35 +1,28 @@
-name: Optimize resource pack
+name: packsquash
 
-on: 
-  [push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  packsquash:
-    permissions: write-all
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Clone repository with full history
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Required for PackSquash
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Run PackSquash
-        uses: ComunidadAylas/PackSquash-action@v4
+        uses: ComunidadAylas/PackSquash-action@v3
         with:
-          options_file: packsquash.toml  # Your PackSquash config file
-          path: Frontierparkspack        # Folder where assets/, pack.mcmeta, etc. are
+          config-path: packsquash.toml
+          output-path: Frontierparkspack.zip
 
-      - name: Upload optimized pack to artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload pack to server
+        uses: appleboy/scp-action@v0.1.7
         with:
-          name: optimized-pack
-          path: pack.zip  # Output file from PackSquash
-
-      - name: Upload via SCP
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SCP_HOST }}
-          username: ${{ secrets.SCP_USER }}
-          password: ${{ secrets.SCP_PASS }}
-          source: "pack.zip"
-          target: "/path/on/server"
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASS }}
+          source: "Fr
