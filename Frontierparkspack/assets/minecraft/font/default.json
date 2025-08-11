@@ -2,28 +2,28 @@
   "providers": [
     {
       "type": "bitmap",
-      "file": "minecraft:textures/font/logo.png",
+      "file": "minecraft:font/logo.png",
       "ascent": 42,
       "height": 96,
       "chars": ["ꡥꡦ", "ꡧꡨ"]
     },
     {
       "type": "bitmap",
-      "file": "minecraft:textures/font/ranks/admin.png",
+      "file": "minecraft:font/ranks/admin.png",
       "ascent": 7,
       "height": 7,
       "chars": ["ꀀ"]
     },
     {
       "type": "bitmap",
-      "file": "minecraft:textures/font/ranks/staff.png",
+      "file": "minecraft:font/ranks/staff.png",
       "ascent": 7,
       "height": 7,
       "chars": ["ꀁ"]
     },
     {
       "type": "bitmap",
-      "file": "minecraft:textures/font/ranks/guest.png",
+      "file": "minecraft:font/ranks/guest.png",
       "ascent": 7,
       "height": 7,
       "chars": ["ꀅ"]
