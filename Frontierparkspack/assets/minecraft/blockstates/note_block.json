@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "instrument=banjo,note=0": { "model": "block/custom_nb_1" },
+    "instrument=banjo,note=1": { "model": "block/custom_nb_2" },
+    "instrument=banjo,note=3": { "model": "block/custom_nb_3" },
+    "instrument=banjo,note=4": { "model": "block/custom_nb_4" },
+    "instrument=banjo,note=5": { "model": "block/custom_nb_5" },
+
+    "": { "model": "minecraft:block/note_block" }
+  }
+}
