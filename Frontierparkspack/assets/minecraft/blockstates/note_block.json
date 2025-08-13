@@ -17,7 +17,6 @@
     "instrument=banjo,note=5": { "model": "block/custom_nb_15" },
     "instrument=banjo,note=5": { "model": "block/custom_nb_16" },
     "instrument=banjo,note=5": { "model": "block/custom_nb_17" },
-    "instrument=banjo,note=5": { "model": "block/custom_nb_18" },
 
     "": { "model": "minecraft:block/note_block" }
   }
