@@ -5,8 +5,7 @@
             "file": "minecraft:font/black_box.png",
             "ascent": 250,
             "height": 1500,
-            "chars": ["\uE001"]
+            "chars": ["\uE002"]
         }
-
     ]
 }
