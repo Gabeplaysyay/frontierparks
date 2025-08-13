@@ -3,8 +3,8 @@
         {
             "type": "bitmap",
             "file": "minecraft:font/black_box.png",
-            "ascent": 256,
-            "height": 256,
+            "ascent": 250,
+            "height": 1500,
             "chars": ["\uE002"]
         }
     ]
